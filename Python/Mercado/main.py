@@ -10,6 +10,7 @@ class App:
         self.root.title("Mercado Inteligente")
 
         self.usuario_controller = UsuarioController()
+        self.contador_productos = 1
         self.producto_controller = ProductoController()
         self.categoria_controller = CategoriaController()
         self.carrito_controller = CarritoController()
@@ -49,7 +50,9 @@ class App:
         self.actualizar_listas()
 
     def agregar_producto(self):
-        self.producto_controller.crear_producto("Producto1", "Descripción1", 10.0, 5)
+        nombre_producto = f"Producto {self.contador_productos}"
+        self.producto_controller.crear_producto(nombre_producto, "Descripción1", 10.0, 5)
+        self.contador_productos += 1  # Incrementa el contador
         self.actualizar_listas()
 
     def agregar_categoria(self):
