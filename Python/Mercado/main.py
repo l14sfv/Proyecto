@@ -102,12 +102,27 @@ class App:
         contrasena = self.contrasena_entry.get()
         self.usuario_controller.crear_usuario(nombres, apellidos, documento, email, telefono, nombre_usuario, contrasena)
         self.actualizar_listas()
+        self.limpiar_campos_usuario()
+
+    def limpiar_campos_usuario(self):
+        self.nombres_entry.delete(0, tk.END)
+        self.apellidos_entry.delete(0, tk.END)
+        self.documento_entry.delete(0, tk.END)
+        self.email_entry.delete(0, tk.END)
+        self.telefono_entry.delete(0, tk.END)
+        self.nombre_usuario_entry.delete(0, tk.END)
+        self.contrasena_entry.delete(0, tk.END)
 
     def agregar_categoria(self):
         nombre_categoria = self.nombre_categoria_entry.get()
         descripcion = self.descripcion_categoria_entry.get()
         self.categoria_controller.crear_categoria(nombre_categoria, descripcion)
         self.actualizar_listas()
+        self.limpiar_campos_categoria()
+
+    def limpiar_campos_categoria(self):
+        self.nombre_categoria_entry.delete(0, tk.END)
+        self.descripcion_categoria_entry.delete(0, tk.END)
 
     def agregar_producto(self):
         try:
@@ -120,8 +135,16 @@ class App:
                 raise ValueError("Todos los campos son obligatorios.")
             self.producto_controller.crear_producto(nombre, descripcion, precio, cantidad, nombre_categoria)
             self.actualizar_listas()
+            self.limpiar_campos_producto()
         except ValueError as e:
             messagebox.showerror("Error", f"Entrada inválida: {e}")
+
+    def limpiar_campos_producto(self):
+        self.nombre_producto_entry.delete(0, tk.END)
+        self.descripcion_producto_entry.delete(0, tk.END)
+        self.precio_producto_entry.delete(0, tk.END)
+        self.cantidad_producto_entry.delete(0, tk.END)
+        self.categoria_producto_combobox.set('')
 
     def agregar_al_carrito(self):
         selected_user_index = self.usuario_listbox.curselection()
