@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox  # Importar messagebox
 from controllers.usuario_controller import UsuarioController
 from controllers.producto_controller import ProductoController
 from controllers.categoria_controller import CategoriaController
@@ -10,17 +10,19 @@ class App:
         self.root = root
         self.root.title("Mercado Inteligente")
 
+        # Controladores
         self.usuario_controller = UsuarioController()
         self.producto_controller = ProductoController()
         self.categoria_controller = CategoriaController()
         self.carrito_controller = CarritoController()
 
+        # Crear la interfaz
         self.create_widgets()
 
     def create_widgets(self):
         # Usuario
         tk.Label(self.root, text="Usuarios").grid(row=0, column=0)
-        self.usuario_listbox = tk.Listbox(self.root)
+        self.usuario_listbox = tk.Listbox(self.root, selectmode=tk.SINGLE, exportselection=False)  # Desactivar exportselection
         self.usuario_listbox.grid(row=1, column=0, rowspan=6)
         tk.Label(self.root, text="Nombres").grid(row=1, column=1)
         self.nombres_entry = tk.Entry(self.root)
@@ -47,7 +49,7 @@ class App:
 
         # Categoria
         tk.Label(self.root, text="Categorias").grid(row=0, column=3)
-        self.categoria_listbox = tk.Listbox(self.root)
+        self.categoria_listbox = tk.Listbox(self.root, selectmode=tk.SINGLE, exportselection=False)
         self.categoria_listbox.grid(row=1, column=3, rowspan=5)
         tk.Label(self.root, text="Nombre").grid(row=1, column=4)
         self.nombre_categoria_entry = tk.Entry(self.root)
@@ -59,7 +61,7 @@ class App:
 
         # Producto
         tk.Label(self.root, text="Productos").grid(row=0, column=6)
-        self.producto_listbox = tk.Listbox(self.root)
+        self.producto_listbox = tk.Listbox(self.root, selectmode=tk.SINGLE, exportselection=False)  # Desactivar exportselection
         self.producto_listbox.grid(row=1, column=6, rowspan=6)
         tk.Label(self.root, text="Nombre").grid(row=1, column=7)
         self.nombre_producto_entry = tk.Entry(self.root)
@@ -87,6 +89,7 @@ class App:
         self.total_label = tk.Label(self.root, text="Total: $0.0")
         self.total_label.grid(row=13, column=1)
 
+        # Actualizar listas al iniciar
         self.actualizar_listas()
 
     def agregar_usuario(self):
@@ -99,7 +102,7 @@ class App:
         contrasena = self.contrasena_entry.get()
         self.usuario_controller.crear_usuario(nombres, apellidos, documento, email, telefono, nombre_usuario, contrasena)
         self.actualizar_listas()
-        
+
     def agregar_categoria(self):
         nombre_categoria = self.nombre_categoria_entry.get()
         descripcion = self.descripcion_categoria_entry.get()
@@ -107,34 +110,52 @@ class App:
         self.actualizar_listas()
 
     def agregar_producto(self):
-        nombre = self.nombre_producto_entry.get()
-        descripcion = self.descripcion_producto_entry.get()
-        precio = float(self.precio_producto_entry.get())
-        cantidad = int(self.cantidad_producto_entry.get())
-        nombre_categoria = self.categoria_producto_combobox.get()
-        self.producto_controller.crear_producto(nombre, descripcion, precio, cantidad, nombre_categoria)
-        self.actualizar_listas()
+        try:
+            nombre = self.nombre_producto_entry.get()
+            descripcion = self.descripcion_producto_entry.get()
+            precio = float(self.precio_producto_entry.get())
+            cantidad = int(self.cantidad_producto_entry.get())
+            nombre_categoria = self.categoria_producto_combobox.get()
+            if not nombre or not descripcion or not nombre_categoria:
+                raise ValueError("Todos los campos son obligatorios.")
+            self.producto_controller.crear_producto(nombre, descripcion, precio, cantidad, nombre_categoria)
+            self.actualizar_listas()
+        except ValueError as e:
+            messagebox.showerror("Error", f"Entrada inválida: {e}")
 
     def agregar_al_carrito(self):
-        usuario = self.usuario_controller.obtener_usuarios()[0]  # Aca se usa el primer usuario para simplificar
-        producto = self.producto_controller.obtener_productos()[0]  # Aca se usa el primer producto para simplificar
+        selected_user_index = self.usuario_listbox.curselection()
+        selected_product_index = self.producto_listbox.curselection()
+        
+        if not selected_user_index:
+            messagebox.showwarning("Advertencia", "Seleccione un usuario.")
+            return
+        if not selected_product_index:
+            messagebox.showwarning("Advertencia", "Seleccione un producto.")
+            return
+        
+        usuario = self.usuario_controller.obtener_usuarios()[selected_user_index[0]]
+        producto = self.producto_controller.obtener_productos()[selected_product_index[0]]
         self.carrito_controller.agregar_producto(usuario, producto, 1)
         self.actualizar_carrito(usuario)
 
     def calcular_total(self):
-        usuario = self.usuario_controller.obtener_usuarios()[0]  # Aca se usa el primer usuario para simplificar
+        usuario = self.usuario_controller.obtener_usuarios()[0]  # Usar el primer usuario para simplificar
         total = self.carrito_controller.calcular_total(usuario)
         self.total_label.config(text=f"Total: ${total:.2f}")
 
     def actualizar_listas(self):
+        # Actualizar lista de usuarios
         self.usuario_listbox.delete(0, tk.END)
         for usuario in self.usuario_controller.obtener_usuarios():
             self.usuario_listbox.insert(tk.END, usuario.nombre_usuario)
 
+        # Actualizar lista de categorías
         self.categoria_listbox.delete(0, tk.END)
         for categoria in self.categoria_controller.obtener_categorias():
             self.categoria_listbox.insert(tk.END, categoria.nombre)
 
+        # Actualizar lista de productos
         self.producto_listbox.delete(0, tk.END)
         for producto in self.producto_controller.obtener_productos():
             self.producto_listbox.insert(tk.END, producto.nombre)
@@ -154,4 +175,3 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = App(root)
     root.mainloop()
-    
