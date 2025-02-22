@@ -81,13 +81,13 @@ class App:
         tk.Button(self.root, text="Agregar Producto", command=self.agregar_producto).grid(row=6, column=8)
 
         # Carrito
-        tk.Label(self.root, text="Carrito").grid(row=9, column=0)
+        tk.Label(self.root, text="Carrito").grid(row=9, column=4)
         self.carrito_listbox = tk.Listbox(self.root)
-        self.carrito_listbox.grid(row=10, column=0, rowspan=5)
-        tk.Button(self.root, text="Agregar al Carrito", command=self.agregar_al_carrito).grid(row=11, column=1)
-        tk.Button(self.root, text="Calcular Total", command=self.calcular_total).grid(row=12, column=1)
+        self.carrito_listbox.grid(row=10, column=4, rowspan=5)
+        tk.Button(self.root, text="Agregar al Carrito", command=self.agregar_al_carrito).grid(row=11, column=5)
+        tk.Button(self.root, text="Calcular Total", command=self.calcular_total).grid(row=12, column=5)
         self.total_label = tk.Label(self.root, text="Total: $0.0")
-        self.total_label.grid(row=13, column=1)
+        self.total_label.grid(row=13, column=5)
 
         # Actualizar listas al iniciar
         self.actualizar_listas()
