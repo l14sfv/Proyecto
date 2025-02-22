@@ -25,13 +25,13 @@ class App:
         self.usuario_listbox.grid(row=1, column=0)
         tk.Button(self.root, text="Agregar Usuario", command=self.agregar_usuario).grid(row=2, column=0)
 
-        # Producto 
+        # Producto
         tk.Label(self.root, text="Productos").grid(row=0, column=1)
         self.producto_listbox = tk.Listbox(self.root)
         self.producto_listbox.grid(row=1, column=1)
         tk.Button(self.root, text="Agregar Producto", command=self.agregar_producto).grid(row=2, column=1)
 
-        # Categoria 
+        # Categoria
         tk.Label(self.root, text="Categorias").grid(row=0, column=2)
         self.categoria_listbox = tk.Listbox(self.root)
         self.categoria_listbox.grid(row=1, column=2)
