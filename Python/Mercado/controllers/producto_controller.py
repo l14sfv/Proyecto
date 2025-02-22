@@ -8,10 +8,8 @@ class ProductoController:
         self.categoria_repository = CategoriaRepository()
 
     def crear_producto(self, nombre, descripcion, precio, cantidad, nombre_categoria):
-        categoria = self.categoria_repository.find_by_nombre(nombre_categoria)
-        if categoria:
-            producto = Producto(nombre, descripcion, precio, cantidad, categoria)
-            self.producto_repository.save(producto)
+        producto = Producto(nombre, descripcion, precio, cantidad, nombre_categoria)
+        self.producto_repository.save(producto)
 
     def obtener_productos(self):
         return self.producto_repository.find_all()
