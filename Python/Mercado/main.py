@@ -12,6 +12,7 @@ class App:
         self.usuario_controller = UsuarioController()
         self.contador_productos = 1
         self.producto_controller = ProductoController()
+        self.contador_categorias = 1
         self.categoria_controller = CategoriaController()
         self.carrito_controller = CarritoController()
 
@@ -56,7 +57,9 @@ class App:
         self.actualizar_listas()
 
     def agregar_categoria(self):
-        self.categoria_controller.crear_categoria("Categoria1", "Descripción1")
+        nombre_categoria = f"Categoria {self.contador_categorias}"
+        self.categoria_controller.crear_categoria(nombre_categoria, "Descripción1")
+        self.contador_categorias += 1  # Incrementar contador
         self.actualizar_listas()
 
     def agregar_al_carrito(self):
