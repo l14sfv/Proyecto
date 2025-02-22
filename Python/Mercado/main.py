@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 from controllers.usuario_controller import UsuarioController
 from controllers.producto_controller import ProductoController
 from controllers.categoria_controller import CategoriaController
@@ -44,38 +45,38 @@ class App:
         self.contrasena_entry.grid(row=7, column=2)
         tk.Button(self.root, text="Agregar Usuario", command=self.agregar_usuario).grid(row=8, column=2)
 
-        # Producto
-        tk.Label(self.root, text="Productos").grid(row=0, column=3)
-        self.producto_listbox = tk.Listbox(self.root)
-        self.producto_listbox.grid(row=1, column=3, rowspan=6)
-        tk.Label(self.root, text="Nombre").grid(row=1, column=4)
-        self.nombre_producto_entry = tk.Entry(self.root)
-        self.nombre_producto_entry.grid(row=1, column=5)
-        tk.Label(self.root, text="Descripción").grid(row=2, column=4)
-        self.descripcion_producto_entry = tk.Entry(self.root)
-        self.descripcion_producto_entry.grid(row=2, column=5)
-        tk.Label(self.root, text="Precio").grid(row=3, column=4)
-        self.precio_producto_entry = tk.Entry(self.root)
-        self.precio_producto_entry.grid(row=3, column=5)
-        tk.Label(self.root, text="Cantidad").grid(row=4, column=4)
-        self.cantidad_producto_entry = tk.Entry(self.root)
-        self.cantidad_producto_entry.grid(row=4, column=5)
-        tk.Label(self.root, text="Categoría").grid(row=5, column=4)
-        self.categoria_producto_entry = tk.Entry(self.root)
-        self.categoria_producto_entry.grid(row=5, column=5)
-        tk.Button(self.root, text="Agregar Producto", command=self.agregar_producto).grid(row=6, column=5)
-
         # Categoria
-        tk.Label(self.root, text="Categorias").grid(row=0, column=6)
+        tk.Label(self.root, text="Categorias").grid(row=0, column=3)
         self.categoria_listbox = tk.Listbox(self.root)
-        self.categoria_listbox.grid(row=1, column=6, rowspan=5)
-        tk.Label(self.root, text="Nombre").grid(row=1, column=7)
+        self.categoria_listbox.grid(row=1, column=3, rowspan=5)
+        tk.Label(self.root, text="Nombre").grid(row=1, column=4)
         self.nombre_categoria_entry = tk.Entry(self.root)
-        self.nombre_categoria_entry.grid(row=1, column=8)
-        tk.Label(self.root, text="Descripción").grid(row=2, column=7)
+        self.nombre_categoria_entry.grid(row=1, column=5)
+        tk.Label(self.root, text="Descripción").grid(row=2, column=4)
         self.descripcion_categoria_entry = tk.Entry(self.root)
-        self.descripcion_categoria_entry.grid(row=2, column=8)
-        tk.Button(self.root, text="Agregar Categoria", command=self.agregar_categoria).grid(row=3, column=8)
+        self.descripcion_categoria_entry.grid(row=2, column=5)
+        tk.Button(self.root, text="Agregar Categoria", command=self.agregar_categoria).grid(row=3, column=5)
+
+        # Producto
+        tk.Label(self.root, text="Productos").grid(row=0, column=6)
+        self.producto_listbox = tk.Listbox(self.root)
+        self.producto_listbox.grid(row=1, column=6, rowspan=6)
+        tk.Label(self.root, text="Nombre").grid(row=1, column=7)
+        self.nombre_producto_entry = tk.Entry(self.root)
+        self.nombre_producto_entry.grid(row=1, column=8)
+        tk.Label(self.root, text="Descripción").grid(row=2, column=7)
+        self.descripcion_producto_entry = tk.Entry(self.root)
+        self.descripcion_producto_entry.grid(row=2, column=8)
+        tk.Label(self.root, text="Precio").grid(row=3, column=7)
+        self.precio_producto_entry = tk.Entry(self.root)
+        self.precio_producto_entry.grid(row=3, column=8)
+        tk.Label(self.root, text="Cantidad").grid(row=4, column=7)
+        self.cantidad_producto_entry = tk.Entry(self.root)
+        self.cantidad_producto_entry.grid(row=4, column=8)
+        tk.Label(self.root, text="Categoría").grid(row=5, column=7)
+        self.categoria_producto_combobox = ttk.Combobox(self.root)
+        self.categoria_producto_combobox.grid(row=5, column=8)
+        tk.Button(self.root, text="Agregar Producto", command=self.agregar_producto).grid(row=6, column=8)
 
         # Carrito
         tk.Label(self.root, text="Carrito").grid(row=9, column=0)
@@ -85,6 +86,8 @@ class App:
         tk.Button(self.root, text="Calcular Total", command=self.calcular_total).grid(row=12, column=1)
         self.total_label = tk.Label(self.root, text="Total: $0.0")
         self.total_label.grid(row=13, column=1)
+
+        self.actualizar_listas()
 
     def agregar_usuario(self):
         nombres = self.nombres_entry.get()
@@ -96,20 +99,20 @@ class App:
         contrasena = self.contrasena_entry.get()
         self.usuario_controller.crear_usuario(nombres, apellidos, documento, email, telefono, nombre_usuario, contrasena)
         self.actualizar_listas()
+        
+    def agregar_categoria(self):
+        nombre_categoria = self.nombre_categoria_entry.get()
+        descripcion = self.descripcion_categoria_entry.get()
+        self.categoria_controller.crear_categoria(nombre_categoria, descripcion)
+        self.actualizar_listas()
 
     def agregar_producto(self):
         nombre = self.nombre_producto_entry.get()
         descripcion = self.descripcion_producto_entry.get()
         precio = float(self.precio_producto_entry.get())
         cantidad = int(self.cantidad_producto_entry.get())
-        nombre_categoria = self.categoria_producto_entry.get()
+        nombre_categoria = self.categoria_producto_combobox.get()
         self.producto_controller.crear_producto(nombre, descripcion, precio, cantidad, nombre_categoria)
-        self.actualizar_listas()
-
-    def agregar_categoria(self):
-        nombre = self.nombre_categoria_entry.get()
-        descripcion = self.descripcion_categoria_entry.get()
-        self.categoria_controller.crear_categoria(nombre, descripcion)
         self.actualizar_listas()
 
     def agregar_al_carrito(self):
@@ -128,13 +131,17 @@ class App:
         for usuario in self.usuario_controller.obtener_usuarios():
             self.usuario_listbox.insert(tk.END, usuario.nombre_usuario)
 
+        self.categoria_listbox.delete(0, tk.END)
+        for categoria in self.categoria_controller.obtener_categorias():
+            self.categoria_listbox.insert(tk.END, categoria.nombre)
+
         self.producto_listbox.delete(0, tk.END)
         for producto in self.producto_controller.obtener_productos():
             self.producto_listbox.insert(tk.END, producto.nombre)
 
-        self.categoria_listbox.delete(0, tk.END)
-        for categoria in self.categoria_controller.obtener_categorias():
-            self.categoria_listbox.insert(tk.END, categoria.nombre)
+        # Actualizar combobox de categorías
+        categorias = [categoria.nombre for categoria in self.categoria_controller.obtener_categorias()]
+        self.categoria_producto_combobox['values'] = categorias
 
     def actualizar_carrito(self, usuario):
         self.carrito_listbox.delete(0, tk.END)
@@ -147,3 +154,4 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = App(root)
     root.mainloop()
+    
